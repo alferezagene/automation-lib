@@ -11,6 +11,8 @@ import org.openqa.selenium.interactions.Actions;
 
 import java.util.HashMap;
 
+import static org.junit.Assert.assertFalse;
+
 public class Element {
     public By locator;
     public static WebElement webElement;
@@ -36,6 +38,7 @@ public class Element {
             throw new Exception("Element does not exist after " + seconds + " seconds.");
         } catch (Exception e) {
             e.printStackTrace();
+            assertFalse(false);
         }
     }
 

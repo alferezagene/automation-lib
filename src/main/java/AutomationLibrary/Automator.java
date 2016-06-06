@@ -2,6 +2,10 @@ package AutomationLibrary;
 
 
 import cucumber.api.Scenario;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileDriver;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.EdgeDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
@@ -13,10 +17,13 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Automator {
@@ -164,10 +171,24 @@ public class Automator {
 
     private void setupRemoteWebDriver() {
         //TODO - saucelabs file upload
-        try {
-            driver = new RemoteWebDriver(new URL(this.URL), caps);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        if (caps.getCapability("platformName").toString().toLowerCase().equals("android")) {
+            try {
+                driver = new AndroidDriver(new URL(this.URL), caps);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        } else if (caps.getCapability("platformName").toString().toLowerCase().equals("ios")) {
+            try {
+                driver = new IOSDriver(new URL(this.URL), caps);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                driver = new RemoteWebDriver(new URL(this.URL), caps);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -235,6 +256,67 @@ public class Automator {
         } catch (Exception e) {
             //already on it;
         }
+    }
+
+
+    public void swipeDownAndroid() {
+        AppiumDriver appiumDriver = (AppiumDriver) driver;
+        appiumDriver.context("NATIVE_APP");
+        final int height = getHeightAsInt();
+        appiumDriver.swipe(0, height - 10, 0, 0, 1000);
+    }
+
+    public void swipeUpAndroid() {
+        AppiumDriver appiumDriver = (AppiumDriver) driver;
+        appiumDriver.context("NATIVE_APP");
+        final int height = getHeightAsInt();
+        appiumDriver.swipe(0, 0, 0, height - 10, 1000);
+    }
+
+    public void swipeLeft() {
+        //ios version
+        if (driver.getClass().getName().toLowerCase().contains("ios")) {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            HashMap<String, Double> flickObject = new HashMap<String, Double>();
+            flickObject.put("endX", 60.0);
+            flickObject.put("endY", 0.0);
+            flickObject.put("touchCount", 1.0);
+            js.executeScript("mobile: flick", flickObject);
+        } else { //android version
+            double width = getWidth();
+            MobileDriver mobileDriver = (MobileDriver) driver;
+            TouchAction action = new TouchAction(mobileDriver);
+            action.press(0, 0).moveTo((int) width / 4, 0).release().perform();
+        }
+    }
+
+    public void swipeRight() {
+        //ios version
+        if (driver.getClass().getName().toLowerCase().contains("ios")) {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            HashMap<String, Double> flickObject = new HashMap<String, Double>();
+            flickObject.put("startX", 60.5);
+            flickObject.put("startY", 0.5);
+            flickObject.put("touchCount", 1.0);
+            js.executeScript("mobile: flick", flickObject);
+        } else { //android version
+            double width = getWidth();
+            MobileDriver mobileDriver = (MobileDriver) driver;
+            TouchAction action = new TouchAction(mobileDriver);
+            action.press((int) width / 4, 0).moveTo((int) width / 8, 0).release().perform();
+        }
+    }
+
+    public final double getWidth() {
+        return driver.manage().window().getSize().getWidth();
+    }
+
+    public final double getHeight() {
+        return driver.manage().window().getSize().getHeight();
+    }
+
+    public final int getHeightAsInt() {
+        return driver.manage().window().getSize().getHeight();
     }
 
 }
