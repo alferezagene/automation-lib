@@ -23,6 +23,10 @@ public class Element {
         this.locator = locator;
     }
 
+    public Element(WebElement element) {
+        this.webElement = element;
+    }
+
     //Waits x seconds for the element to exist - note does not check visibility
     public void waitForElementToExist(int seconds) {
         int i = 0;
@@ -81,17 +85,21 @@ public class Element {
 
     //retrieves the webelement if it exists, otherwise return null
     public WebElement findElement() {
-        if (Automator.driver.findElements(locator).size() > 0) {
-            return Automator.driver.findElement(locator);
-        } else {
-            try {
-                throw new Exception("Element does not exist.");
-            } catch (Exception e) {
-                e.printStackTrace();
-                assert (false);
-            }
-            return null;
-        }
+       if (this.webElement != null) {
+           return webElement;
+       } else {
+           if (Automator.driver.findElements(locator).size() > 0) {
+               return Automator.driver.findElement(locator);
+           } else {
+               try {
+                   throw new Exception("Element does not exist.");
+               } catch (Exception e) {
+                   e.printStackTrace();
+                   assert (false);
+               }
+               return null;
+           }
+       }
     }
 
     //wrapper everything here.
