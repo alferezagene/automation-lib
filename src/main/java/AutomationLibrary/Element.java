@@ -14,8 +14,8 @@ import java.util.HashMap;
 import static org.junit.Assert.assertFalse;
 
 public class Element {
-    public By locator;
-    public static WebElement webElement;
+    public By locator = null;
+    public static WebElement webElement = null;
 
 
     //when instantiating the element we DON'T fetch it. This is so we can set them up without them being visible yet.
@@ -24,14 +24,14 @@ public class Element {
     }
 
     public Element(WebElement element) {
-        this.webElement = element;
+        webElement = element;
     }
 
     //Waits x seconds for the element to exist - note does not check visibility
     public void waitForElementToExist(int seconds) {
         int i = 0;
         while (i < seconds) {
-            if (doesElementExist(this.locator)) {
+            if (exists()) {
                 return;
             } else {
                 HelperMethods.sleep(1);
@@ -65,8 +65,8 @@ public class Element {
     }
 
     //Checks for existence
-    public boolean doesElementExist(By locator) {
-        if (Automator.driver.findElements(locator).size() > 0) {
+    public boolean exists() {
+        if (Automator.driver.findElements(this.locator).size() > 0) {
             return true;
         } else {
             return false;
@@ -85,7 +85,7 @@ public class Element {
 
     //retrieves the webelement if it exists, otherwise return null
     public WebElement findElement() {
-       if (this.webElement != null) {
+       if (locator == null) {
            return webElement;
        } else {
            if (Automator.driver.findElements(locator).size() > 0) {
