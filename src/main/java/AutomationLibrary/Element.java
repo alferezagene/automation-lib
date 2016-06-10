@@ -58,9 +58,32 @@ public class Element {
             }
         }
         try {
-            throw new Exception("Element does not exist after " + seconds + " seconds.");
+            throw new AssertionError("Element is not displayed after " + seconds + " seconds.");
         } catch (Exception e) {
             e.printStackTrace();
+            assert (false);
+
+        }
+    }
+
+    //Waits x seconds for the element's attribute to be the specified value
+    public void waitForElementAttribute(int seconds, String attribute, String value) {
+        int i = 0;
+        while (i < seconds) {
+            if (isElementDisplayed(this.locator)) {
+              if (findElement().getAttribute(attribute).toLowerCase().equals(value.toLowerCase()))
+                return;
+            } else {
+                HelperMethods.sleep(1);
+                i++;
+            }
+        }
+        try {
+            throw new AssertionError("Element's attribute "+attribute+" was not "+value+" after " + seconds + " seconds.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert (false);
+
         }
     }
 
@@ -124,15 +147,27 @@ public class Element {
     }
 
     public Boolean isDisplayed() {
-        return findElement().isDisplayed();
+      try {
+          return findElement().isDisplayed();
+      } catch (Exception e) {
+          return false;
+      }
     }
 
     public Boolean isEnabled() {
-        return findElement().isEnabled();
+        try {
+            return findElement().isEnabled();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Boolean isSelected() {
-        return findElement().isSelected();
+        try {
+            return findElement().isSelected();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     //used for IOS as it pastes in the value rather than tapping each key
