@@ -1,4 +1,4 @@
-package AutomationLibrary.Utilities;
+package nz.co.thebteam.AutomationLibrary.Utilities;
 
 
 import org.apache.commons.io.FileUtils;

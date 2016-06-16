@@ -1,4 +1,4 @@
-package AutomationLibrary;
+package nz.co.thebteam.AutomationLibrary;
 
 
 import cucumber.api.Scenario;
@@ -17,7 +17,6 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
-import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 
 import java.net.MalformedURLException;

@@ -1,4 +1,4 @@
-package AutomationLibrary;
+package nz.co.thebteam.AutomationLibrary;
 
 public class HelperMethods {
 

@@ -1,11 +1,10 @@
 package AutomationLibTests;
 
 
-import AutomationLibrary.AutomationType;
-import AutomationLibrary.Automator;
-import AutomationLibrary.Element;
+import nz.co.thebteam.AutomationLibrary.AutomationType;
+import nz.co.thebteam.AutomationLibrary.Automator;
+import nz.co.thebteam.AutomationLibrary.Element;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 

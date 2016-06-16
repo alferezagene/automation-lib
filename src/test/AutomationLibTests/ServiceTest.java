@@ -1,6 +1,6 @@
 package AutomationLibTests;
 
-import AutomationLibrary.Services.RESTRequest;
+import nz.co.thebteam.AutomationLibrary.Services.RESTRequest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

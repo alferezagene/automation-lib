@@ -1,6 +1,6 @@
 package AutomationLibTests;
 
-import AutomationLibrary.Utilities.HTMLParser;
+import nz.co.thebteam.AutomationLibrary.Utilities.HTMLParser;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

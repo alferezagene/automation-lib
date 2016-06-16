@@ -1,4 +1,4 @@
-package AutomationLibrary.Utilities;
+package nz.co.thebteam.AutomationLibrary.Utilities;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

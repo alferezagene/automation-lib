@@ -1,4 +1,4 @@
-package AutomationLibrary.Utilities;
+package nz.co.thebteam.AutomationLibrary.Utilities;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

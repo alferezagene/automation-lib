@@ -1,4 +1,4 @@
-package AutomationLibrary;
+package nz.co.thebteam.AutomationLibrary;
 
 
 import org.openqa.selenium.By;

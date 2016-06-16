@@ -1,4 +1,4 @@
-package AutomationLibrary.Utilities;
+package nz.co.thebteam.AutomationLibrary.Utilities;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
