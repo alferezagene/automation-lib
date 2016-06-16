@@ -7,7 +7,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.*;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -16,7 +15,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
 import java.io.*;
-import java.util.Iterator;
 
 public class XMLParser {
     public String xmlToParse = null;
@@ -52,31 +50,14 @@ public class XMLParser {
     }
 
 
-    public String findElementValue(String xpath) {
-        try {
-            XPath xPath = XPathFactory.newInstance().newXPath();
-            NodeList nodeList = (NodeList) xPath.compile("//" + xpath).evaluate(doc, XPathConstants.NODESET);
-
-            //when it's a unique node name.
-            //TODO write a new one for parsing nodes
-            Node nNode = nodeList.item(0);
-            Element eElement = (Element) nNode;
-            return eElement.getTextContent();
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public String findElementValueNS(String elementToFind) {
+    public String findElementValue(String elementToFind) {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new NameSpace(doc));
-        String result = null;
         try {
             return (String) xpath.evaluate("//" + elementToFind, doc, XPathConstants.STRING);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
-            //     System.out.println("The element " + elementToFind + " does not exist");
+            System.out.println("The element " + elementToFind + " does not exist");
             return null;
         }
 
