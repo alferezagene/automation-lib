@@ -66,14 +66,14 @@ public class XMLParserTest {
 
     @Test
     public void XMLParserTestElementNamespace() {
-        XMLParser xmlParser = new XMLParser(template);
+        XMLParser xmlParser = new XMLParser(template, true);
         assertEquals("1", xmlParser.findElementValue("bkd:id"));
         assertEquals("12345", xmlParser.findElementValue("bkd:WibbleNo"));
     }
 
     @Test
     public void XMLParserTestPrint() {
-        XMLParser xmlParser = new XMLParser(template);
+        XMLParser xmlParser = new XMLParser(template, true);
         xmlParser.printAllElements();
     }
 

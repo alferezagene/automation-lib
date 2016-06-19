@@ -20,10 +20,22 @@ public class XMLParser {
     public String xmlToParse = null;
     public Document doc;
     private NameSpace nameSpace;
+    private Boolean hasNameSpace = false;
 
-    public XMLParser(String xmlToParser) {
-        this.xmlToParse = xmlToParser;
+    public XMLParser(String xmlToParse) {
+        this.xmlToParse = xmlToParse;
         try {
+            createXMLParser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public XMLParser(String xmlToParse, Boolean hasNamespace) {
+        this.xmlToParse = xmlToParse;
+        try {
+            this.hasNameSpace = hasNamespace;
             createXMLParser();
             readNameSpaces();
         } catch (Exception e) {
@@ -39,14 +51,15 @@ public class XMLParser {
     public void createXMLParser() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
+            if (hasNameSpace) {
+                factory.setNamespaceAware(true);
+            }
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(new InputSource(new StringReader(xmlToParse)));
             doc.getDocumentElement().normalize();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 
