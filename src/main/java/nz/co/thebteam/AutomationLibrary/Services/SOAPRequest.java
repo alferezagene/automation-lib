@@ -13,7 +13,7 @@ import java.util.zip.GZIPInputStream;
 public class SOAPRequest {
 
     private String URL;
-    private String[] properties;
+    private List<List<String>> properties;
     private String requestType;
     private String XMLRequest;
     private int responseCode;
@@ -24,20 +24,29 @@ public class SOAPRequest {
     private Map<String, List<String>> headers;
     private HttpURLConnection conn;
 
-    public SOAPRequest(String URL, String JSONRequest, String[] properties, String requestType) {
+    public SOAPRequest(String URL, String JSONRequest, List<List<String>> properties, String requestType) {
         this.URL = URL;
         this.XMLRequest = JSONRequest;
         this.requestType = requestType;
         this.properties = properties;
     }
 
-    public SOAPRequest(String URL, String[] properties, String requestType) {
+    public SOAPRequest(String URL, String requestBody, String requestType) {
+        this.URL = URL;
+        this.XMLRequest = requestBody;
+        this.requestType = requestType;
+    }
+
+    public SOAPRequest(String URL, List<List<String>> properties, String requestType) {
         this.URL = URL;
         this.requestType = requestType;
         this.properties = properties;
     }
 
-
+    public SOAPRequest(String URL, String requestType) {
+        this.URL = URL;
+        this.requestType = requestType;
+    }
 
     public void setAuthentication(String type, String username, String password) {
         this.authentication = type;
@@ -54,9 +63,10 @@ public class SOAPRequest {
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(requestType);
 
-            for (String property : properties) {
-                String[] splitProperties = property.split(":");
-                conn.setRequestProperty(splitProperties[0], splitProperties[1]);
+            if (properties != null) {
+                for (List<String> property : properties) {
+                    conn.addRequestProperty(property.get(0), property.get(1));
+                }
             }
 
             //checks for authentication settings
