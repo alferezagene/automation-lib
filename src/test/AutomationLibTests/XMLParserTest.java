@@ -46,7 +46,7 @@ public class XMLParserTest {
     @Test
     public void XMLParserTestAttribute() {
         XMLParser xmlParser = new XMLParser(xmlToParse);
-      assertEquals("100", xmlParser.findElementAttribute("Error", "code"));
+        assertEquals("100", xmlParser.findElementAttribute("Error", "code"));
         assertEquals("Invalid Wibble", xmlParser.findElementAttribute("Error", "message"));
     }
 
@@ -61,14 +61,14 @@ public class XMLParserTest {
     public void XMLParserToString() { //note that this fails due to the parser reordering the properties. Will fix one day.
         XMLParser xmlParser = new XMLParser(xmlToParse);
         String wibble = xmlParser.toXMLString();
-        assertEquals(wibble, xmlToParse);
+        assertEquals(xmlToParse, wibble);
     }
 
     @Test
     public void XMLParserTestElementNamespace() {
-        XMLParser xmlParser = new XMLParser(template, true);
-        assertEquals("1", xmlParser.findElementValue("bkd:id"));
-        assertEquals("12345", xmlParser.findElementValue("bkd:WibbleNo"));
+        XMLParser xmlParser = new XMLParser(template);
+        assertEquals("1", xmlParser.findElementValue("id"));
+        assertEquals("12345", xmlParser.findElementValue("WibbleNo"));
     }
 
     @Test

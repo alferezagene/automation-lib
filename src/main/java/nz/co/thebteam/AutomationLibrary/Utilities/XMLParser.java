@@ -19,8 +19,7 @@ import java.io.*;
 public class XMLParser {
     public String xmlToParse = null;
     public Document doc;
-    private NameSpace nameSpace;
-    private Boolean hasNameSpace = false;
+
 
     public XMLParser(String xmlToParse) {
         this.xmlToParse = xmlToParse;
@@ -35,25 +34,17 @@ public class XMLParser {
     public XMLParser(String xmlToParse, Boolean hasNamespace) {
         this.xmlToParse = xmlToParse;
         try {
-            this.hasNameSpace = hasNamespace;
             createXMLParser();
-            readNameSpaces();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private void readNameSpaces() {
-        nameSpace = new NameSpace(doc);
-    }
 
     public void createXMLParser() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            if (hasNameSpace) {
-                factory.setNamespaceAware(true);
-            }
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(new InputSource(new StringReader(xmlToParse)));
             doc.getDocumentElement().normalize();
@@ -63,11 +54,11 @@ public class XMLParser {
     }
 
 
+    //finds a single element (any namespace) or the first of multiple with the same name
     public String findElementValue(String elementToFind) {
         XPath xpath = XPathFactory.newInstance().newXPath();
-        xpath.setNamespaceContext(new NameSpace(doc));
         try {
-            return (String) xpath.evaluate("//" + elementToFind, doc, XPathConstants.STRING);
+            return (String) xpath.evaluate("//*[local-name()='"+elementToFind+"']/text()", doc, XPathConstants.STRING);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
             System.out.println("The element " + elementToFind + " does not exist");
