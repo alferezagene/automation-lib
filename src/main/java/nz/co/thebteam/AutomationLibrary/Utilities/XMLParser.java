@@ -58,10 +58,10 @@ public class XMLParser {
     public String findElementValue(String elementToFind) {
         XPath xpath = XPathFactory.newInstance().newXPath();
         try {
-            return (String) xpath.evaluate("//*[local-name()='"+elementToFind+"']/text()", doc, XPathConstants.STRING);
+            return (String) xpath.evaluate("//*[local-name()='" + elementToFind + "']/text()", doc, XPathConstants.STRING);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
-            System.out.println("The element " + elementToFind + " does not exist");
+            System.out.println("The element " + elementToFind + " cannot be found.");
             return null;
         }
 
@@ -142,5 +142,29 @@ public class XMLParser {
         System.out.println();
     }
 
+    //finds a node
+    public NodeList findNode(String nodeToFind) {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        try {
+            return (NodeList) xpath.compile("//*[local-name()='" + nodeToFind + "']").evaluate(doc, XPathConstants.NODESET);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("The node " + nodeToFind + " cannot be found.");
+            return null;
+        }
+    }
+
+    //finds the text value of an element belonging to a node - ensure the node is cloned!!
+    public String findElementValueOnNode(Node node, String elementToFind) {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        node = node.cloneNode(true);
+        try {
+            return (String) xpath.evaluate("*[local-name()='" + elementToFind + "']/text()", node, XPathConstants.STRING);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("The element " + elementToFind + " cannot be found.");
+            return null;
+        }
+    }
 
 }

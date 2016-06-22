@@ -32,6 +32,12 @@ public class XMLParserTest {
             "            <!--Optional:-->\n" +
             "            <bkd:BibbleNo></bkd:BibbleNo>\n" +
             "         </bkd:Request>\n" +
+            "         <bkd:Request>\n" +
+            "            <!--Optional:-->\n" +
+            "            <bkd:WibbleNo>67890</bkd:WibbleNo>\n" +
+            "            <!--Optional:-->\n" +
+            "            <bkd:BibbleNo></bkd:BibbleNo>\n" +
+            "         </bkd:Request>\n" +
             "      </bkd:AccountBalances>\n" +
             "   </soapenv:Body>\n" +
             "</soapenv:Envelope>";
@@ -75,6 +81,13 @@ public class XMLParserTest {
     public void XMLParserTestPrint() {
         XMLParser xmlParser = new XMLParser(template, true);
         xmlParser.printAllElements();
+    }
+
+    @Test
+    public void XMLParserChildrenOfNodes() {
+        XMLParser xmlParser = new XMLParser(template, true);
+        assertEquals("12345", xmlParser.findElementValueOnNode(xmlParser.findNode("Request").item(0),  "WibbleNo"));
+        assertEquals("67890", xmlParser.findElementValueOnNode(xmlParser.findNode("Request").item(1),  "WibbleNo"));
     }
 
 }
