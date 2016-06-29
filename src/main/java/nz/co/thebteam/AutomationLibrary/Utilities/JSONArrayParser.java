@@ -10,7 +10,7 @@ import java.util.List;
 
 public class JSONArrayParser {
 
-    private JSONArray jsonArray;
+    public JSONArray jsonArray;
 
     public JSONArrayParser(String JSONToParse) {
         jsonArray = (JSONArray) JSONValue.parse(JSONToParse);
@@ -24,8 +24,8 @@ public class JSONArrayParser {
         return new JSONArrayParser((JSONArray) jsonArray.get(index));
     }
 
-    public JSONParser getObjectAtIndex(int index) {
-        return new JSONParser((JSONObject) jsonArray.get(index));
+    public JSONObject getObjectAtIndex(int index) {
+        return ((JSONObject) jsonArray.get(index));
     }
 
     public int size() {
@@ -51,6 +51,39 @@ public class JSONArrayParser {
         return null;
     }
 
+    public List<String> findAllValues(String nodeName) {
+        List<String> values = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObj = (JSONObject) jsonArray.get(i);
+            HashMap<String, String> flattenedJSON;
+
+            flattenedJSON = JSONParser.flattenValues(jsonObj);
+            if (flattenedJSON.containsKey(nodeName)) {
+                values.add(flattenedJSON.get(nodeName));
+            }
+
+        }
+        return values;
+    }
+    public List<Object> findAllObjects(String nodeName) {
+        List<Object> values = new ArrayList<>();
+        List<HashMap<String, Object>> flattenedJSON = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+            Object jsonObj =jsonArray.get(i);
+            flattenedJSON.addAll(JSONParser.flattenObjects((JSONObject) jsonObj));
+        }
+
+        for (HashMap<String, Object> value : flattenedJSON) {
+            if (value.containsKey(nodeName)) {
+                values.add(value.get(nodeName));
+            }
+        }
+        return values;
+    }
+
+
     public List<JSONObject> findNodes(String nodeName) {
 
         List<JSONObject> nodes = new ArrayList<>();
@@ -65,16 +98,18 @@ public class JSONArrayParser {
                 for (int q = 0; q < keysCollection.length; q++) {
                     //if it's the right node, add it to the list
                     if (keysCollection[q].equals(nodeName)) {
-                       //sometimes the nodes have an object, sometimes an array with single object
+                        //sometimes the nodes have an object, sometimes an array with single object
                         if (valuesCollection[q].getClass().toString().contains("JSONArray")) {
-                         JSONArray valueArray =  (JSONArray) valuesCollection[q];
-                            nodes.add((JSONObject) valueArray.get(0));
+                            JSONArray valueArray = (JSONArray) valuesCollection[q];
+                            for (int p = 0; p < valueArray.size(); p++) {
+                                nodes.add((JSONObject) valueArray.get(p));
+                            }
                         } else {
                             nodes.add((JSONObject) valuesCollection[q]);
                         }
                     } else if (valuesCollection[q].getClass().toString().contains("JSONArray")) {
                         JSONArrayParser j2 = new JSONArrayParser((JSONArray) valuesCollection[q]);
-                       //recursively go down the jsonarrays and return nodes
+                        //recursively go down the jsonarrays and return nodes
                         nodes.addAll(j2.findNodes(nodeName));
                     }
                 }

@@ -25,7 +25,7 @@ public class TextPrettifier {
         return xmlToConvert;
     }
 
-    public static String prettyFormat(String input) {
+    private static String prettyFormat(String input) {
         try {
             Source xmlInput = new StreamSource(new StringReader(input));
             StringWriter stringWriter = new StringWriter();
@@ -37,18 +37,22 @@ public class TextPrettifier {
             transformer.transform(xmlInput, xmlOutput);
             return xmlOutput.getWriter().toString();
         } catch (Exception e) {
-            throw new RuntimeException(e); // simple exception handling, please review it
+            return "Not XML or could not be parsed";
         }
     }
 
     public static String indentJson(String input) {
-        if (input != null) {
-            String json;
-            JsonParser parser = new JsonParser();
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonElement el = parser.parse(input);
-            json = gson.toJson(el);
-            return json;
+        try {
+            if (input != null) {
+                String json;
+                JsonParser parser = new JsonParser();
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement el = parser.parse(input);
+                json = gson.toJson(el);
+                return json;
+            }
+        } catch (Exception e) {
+            return input;
         }
         return null;
 
