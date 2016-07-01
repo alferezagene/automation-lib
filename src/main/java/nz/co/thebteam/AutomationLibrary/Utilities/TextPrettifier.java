@@ -19,13 +19,13 @@ public class TextPrettifier {
 
     public static String convertXMLtoHTMLFriendly(String xmlToConvert) {
 
-        xmlToConvert = prettyFormat(xmlToConvert);
+        xmlToConvert = prettyFormatXML(xmlToConvert);
         xmlToConvert = xmlToConvert.replace("<", "&lt;");
         xmlToConvert = xmlToConvert.replace(">", "&gt;");
         return xmlToConvert;
     }
 
-    private static String prettyFormat(String input) {
+    public static String prettyFormatXML(String input) {
         try {
             Source xmlInput = new StreamSource(new StringReader(input));
             StringWriter stringWriter = new StringWriter();

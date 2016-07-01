@@ -1,9 +1,19 @@
 package nz.co.thebteam.AutomationLibrary.Services;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +63,8 @@ public class RESTRequest {
 
             java.net.URL url = new URL(URL);
             conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod(requestType);
+
+
 
             if (properties != null) {
                 for (List<String> property : properties) {
@@ -73,7 +84,8 @@ public class RESTRequest {
             }
 
             //we only do an outputstream if we are posting otherwise we get 404
-            if ((requestType.equals("POST")) || (requestType.equals("PUT"))) {
+            if ((requestType.toUpperCase().equals("POST")) || (requestType.toUpperCase().equals("PUT"))) {
+                conn.setRequestMethod(requestType);
                 conn.setDoOutput(true);
                 OutputStream os = conn.getOutputStream();
 
@@ -83,9 +95,25 @@ public class RESTRequest {
                     os.write(0);
                 }
                 os.flush();
+            } else if (requestType.toUpperCase().equals("PATCH")) {
+                //getting around the PATCH issue
+                //TODO later on, handle headers etc
+                CloseableHttpClient httpClient = HttpClients.createDefault();
+                HttpPatch httpPatch = new HttpPatch(new java.net.URI(URL));
+                StringEntity params = new StringEntity(JSONRequest, ContentType.APPLICATION_JSON);
+                httpPatch.setEntity(params);
+                CloseableHttpResponse response = httpClient.execute(httpPatch);
+                HttpEntity entity = response.getEntity();
+                responseCode = response.getStatusLine().getStatusCode();
+                String responseString = EntityUtils.toString(entity, "UTF-8");
+                System.out.println("PATCH response:  " + responseString);
+                return responseString;
+
             } else {
+                conn.setRequestMethod(requestType);
                 conn.setDoOutput(false);
             }
+
 
             //this does the actual request
             this.responseCode = conn.getResponseCode();
