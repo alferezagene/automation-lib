@@ -1,10 +1,7 @@
 package AutomationLibTests;
 
-
-import nz.co.thebteam.AutomationLibrary.Utilities.JSONArrayParser;
 import nz.co.thebteam.AutomationLibrary.Utilities.JSONParser;
 import org.junit.Test;
-
 
 import static org.junit.Assert.assertEquals;
 
@@ -66,13 +63,13 @@ public class JSONTest {
     @Test
     public void simpleJsonTest() {
         JSONParser jp = new JSONParser(jsonExample);
-        assertEquals(jp.getChildNode("widget").getChildNode("text").getValue("data"), "Click Here");
+        assertEquals(jp.getChildJSONObject("widget").getChildJSONObject("text").getValue("data"), "Click Here");
     }
 
 
     @Test
     public void jsonTestWithNodes() {
-        JSONArrayParser jp = new JSONArrayParser(jsonExample2);
+        JSONParser jp = new JSONParser(jsonExample2);
         assertEquals("Foobar", jp.findNodes("name").get(0).get("last"));
         assertEquals("Wibble", jp.findNodes("name").get(1).get("last"));
     }
