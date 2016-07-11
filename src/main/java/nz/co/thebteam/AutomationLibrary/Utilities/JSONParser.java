@@ -92,7 +92,16 @@ public class JSONParser {
                 type = "null";
             }
             if (type.equals("class org.json.simple.JSONArray")) { //array
-                flatList.addAll(flattenValues((JSONArray) valuesCollection[i]));
+                JSONArray ja = (JSONArray) valuesCollection[i];
+                if (ja.size() > 0) { //sometimes there are empty arrays
+                    if (ja.get(0).getClass().toString().equals("class java.lang.String")) {
+                        //it's an array of strings, badly formattted JSON
+                        valuePair.put(keysCollection[i].toString().trim(), valuesCollection[i].toString().trim());
+                        flatList.add(valuePair);
+                    } else {
+                        flatList.addAll(flattenValues((JSONArray) valuesCollection[i]));
+                    }
+                }
             } else if (type.equals("class org.json.simple.JSONObject")) { //object
                 flatList.addAll(flattenValues((JSONObject) valuesCollection[i]));
             } else { //flat value
@@ -144,7 +153,8 @@ public class JSONParser {
                     for (int p = 0; p < valueArray.size(); p++) {
                         nodes.add((JSONObject) valueArray.get(p));
                     }
-                } else {
+
+                } else if (valuesCollection[q].getClass().toString().contains("JSONObject")) {
                     nodes.add((JSONObject) valuesCollection[q]);
                 }
             } else if (valuesCollection[q].getClass().toString().contains("JSONArray")) {
@@ -196,7 +206,7 @@ public class JSONParser {
 
     public JSONParser getAtIndex(int index) {
         if (!isObject()) {
-            return new JSONParser((JSONArray) jsonArray.get(index));
+            return new JSONParser((JSONObject) jsonArray.get(index));
         } else {
             return null;
         }
@@ -220,7 +230,7 @@ public class JSONParser {
     }
 
     //Retrieves a list of the values matching the nodename
-    //BROKEN
+//BROKEN
     public List<String> findAllValues(String nodeName) {
         List<String> values = new ArrayList<>();
         List<HashMap<String, String>> flattenedJSON;
@@ -234,7 +244,7 @@ public class JSONParser {
                         values.add(keyValuePair.get(nodeName));
                     }
             }
-        } else {
+        } else { //starting with an object
             flattenedJSON = JSONParser.flattenValues(this.jsonObj);
             for (Map<String, String> keyValuePair : flattenedJSON)
                 if (keyValuePair.containsKey(nodeName)) {

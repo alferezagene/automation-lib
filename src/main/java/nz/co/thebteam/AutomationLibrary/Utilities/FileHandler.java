@@ -18,4 +18,14 @@ public class FileHandler {
         FileUtils.writeStringToFile(file, resource, "UTF-8");
     }
 
+    public static String readFileAsString(String fileName) {
+        File file = new File(fileName);
+        try {
+            return FileUtils.readFileToString(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

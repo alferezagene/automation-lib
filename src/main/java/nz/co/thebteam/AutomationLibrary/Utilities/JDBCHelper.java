@@ -1,26 +1,23 @@
 package nz.co.thebteam.AutomationLibrary.Utilities;
 
-import com.mockrunner.mock.jdbc.MockResultSet;
-
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.net.URL;
 import java.sql.*;
-import java.sql.Date;
-import java.util.*;
-
-import static org.junit.Assert.fail;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class JDBCHelper {
 
     String URL;
     ResultSet rs;
     Statement stmt;
-    Connection conn;
+    Connection conn = null;
+    String userName;
+    String password;
 
-    public JDBCHelper(String URL, String query) {
+    public JDBCHelper(String URL, String userName, String password, String query) {
         this.URL = URL;
+        this.userName = userName;
+        this.password = password;
         createConnection();
         sendQuery(query);
     }
@@ -30,17 +27,22 @@ public class JDBCHelper {
         this.rs = rs;
     }
 
+    //live connection - currently only for oracle DBs
+    //You must have ojdbc14.jar in your /jre/lib/ext directory to open an oracle connection successfully
     public void createConnection() {
+        // create  the connection object
         try {
-            conn = DriverManager.getConnection(URL, "", "");
-            stmt = conn.createStatement();
-        } catch (SQLException e) {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            conn = DriverManager.getConnection(URL, userName, password);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    //closes after each query in case of assertion errors
     public void sendQuery(String query) {
         try {
+            stmt = conn.createStatement();
             rs = stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -65,6 +67,13 @@ public class JDBCHelper {
             e.printStackTrace();
         }
 
+        try {
+        if (conn != null) {
+            conn.close();
+        }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return data;
     }
 

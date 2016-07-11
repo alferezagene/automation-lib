@@ -34,3 +34,4 @@ out/production/main/AutomationLibrary/Utilities/JSONArrayParser.class
 out/production/main/AutomationLibrary/Utilities/JSONParser.class
 out/production/main/AutomationLibrary/Utilities/PropertiesHandler.class
 out/production/main/AutomationLibrary/Utilities/XMLParser.class
+src/test/AutomationLibTests/XMLMagic.java
