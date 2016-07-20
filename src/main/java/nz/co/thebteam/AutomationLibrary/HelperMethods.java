@@ -18,19 +18,26 @@ public class HelperMethods {
         }
     }
 
-    public static DataTable createDataTableWithHeaders(List<String> values) {
+
+    //pass a list of colon-delimited values
+    public static DataTable createDataTableWithHeaders(List<String> listValues) {
         List<List<String>> dataArray = new ArrayList<>();
+
+        int size = listValues.get(0).split(":").length;
+
         //this is the header row which is intentionally blank.
         List<String> cd0 = new ArrayList<>();
-        cd0.add("");
-        cd0.add("");
+        for (int i = 0; i < size; i++) {
+            cd0.add("");
+        }
         dataArray.add(cd0);
 
-        for (String pair : values) {
+        for (String values : listValues) {
             List<String> row = new ArrayList<>();
-            String[] pairValues = pair.split(":");
-            row.add(pairValues[0]);
-            row.add(pairValues[1]);
+            String[] splitValues = values.split(":");
+            for (int i = 0; i < size; i++) {
+                row.add(splitValues[i]);
+            }
             dataArray.add(row);
         }
         return DataTable.create(dataArray);

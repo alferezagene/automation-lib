@@ -88,7 +88,10 @@ public class SimpleReporter {
                 "</head>\n" +
                 "<body>";
 
+        List<String> ids = new ArrayList<>();
+
         //header
+        //  reportOutput += "<a class=\"confluence-link\" href=\"#Testing-id\" data-mce-href=\"#Testing-id\" data-base-url=\"https://jiragenesisenergy.atlassian.net/wiki\" data-linked-resource-default-alias=\"id\" data-anchor=\"id\">Visit the Useful Tips Section</a>";
         reportOutput += "<h1>" + reportTitle + "</h1>";
         reportOutput += "<table style=\"width:80%\">\n";
         reportOutput += "<tr>\n";
@@ -99,14 +102,54 @@ public class SimpleReporter {
         reportOutput += "</tr>\n";
         reportOutput += "<tr>\n";
         reportOutput += "    <td>" + scenarioCount + "</td>\n" +
-                "    <td>" + scenarioPassedCount + "</td> \n" +
+                "    <td id=\"tips\"=>" + scenarioPassedCount + "</td> \n" +
                 "    <td>" + scenarioFailedCount + "</td> \n" +
                 "    <td>" + String.format("%.2f", totalTime) + "</td>\n";
 
         reportOutput += "</tr>\n";
         reportOutput += "</table><br>";
-        for (TestFeature feature : testFeatures) {
 
+
+        //failure quicklinks
+
+        if (scenarioFailedCount > 0) {
+            reportOutput += "<h2>Quicklinks to failed tests</h2>";
+
+            int i = 1;
+            reportOutput += "<table style=\"width:80%\">\n";
+            reportOutput += "<tr>\n" +
+                    "    <th>Scenario Name</th> \n";
+            reportOutput += "    <th>Failed step</th>\n";
+            reportOutput += "</tr>\n";
+
+
+            for (TestFeature feature : testFeatures) {
+                for (TestScenario scenario : feature.testScenarios) {
+                    if (scenario.testResult.equals("failed")) {
+                        String failedTag = "failed" + i;
+                        ids.add(failedTag);
+                        reportOutput += "<tr>\n" +
+                                "    <td><a class=\"confluence-link\" href=\"#Testing-" + failedTag + "\" data-mce-href=\"#Testing-" + failedTag + "\" data-linked-resource-default-alias=\"" + failedTag + "\" data-anchor=\"" + failedTag + "\" >" + scenario.testName + "</a></td> \n";
+
+                        for (TestStep step : scenario.steps) {
+                            if (step.result.equals("failed")) {
+                                reportOutput += "    <td>" + step.description + "</td>\n";
+                                break;
+                            }
+                        }
+                        reportOutput += "</tr>\n";
+
+                    }
+                }
+
+            }
+
+            reportOutput += "</table><br>";
+        }
+
+
+        for (TestFeature feature : testFeatures) {
+            int i = 0;
             //Feature table - header
             reportOutput += "<table style=\"width:80%\">\n";
             reportOutput += "<tr>\n";
@@ -129,8 +172,15 @@ public class SimpleReporter {
 
 
                 reportOutput += "<tr>\n";
-                reportOutput += "    <td>Scenario Name</td>\n" +
-                        "    <td>" + scenario.testName + "</td> \n";
+                reportOutput += "    <td>Scenario Name</td>\n";
+
+                if (scenario.testResult.equals("failed")) {
+                    reportOutput += "    <td><p data-macro-default-parameter=\"" + ids.get(i) + "\"  class=\"editor-inline-macro\"  data-macro-name=\"anchor\">" + scenario.testName + "</p></td> \n";
+                    i++;
+                } else {
+                    reportOutput += "    <td>" + scenario.testName + "</td> \n";
+                }
+
                 reportOutput += "</tr>\n";
                 reportOutput += "<tr>\n";
                 reportOutput += "    <td>Result</td>\n" +
@@ -195,11 +245,9 @@ public class SimpleReporter {
 
             }
 
-
             reportOutput += "</table><br>";
         }
 
-        //footers
         reportOutput += "</body>\n" +
                 "</html>";
 
