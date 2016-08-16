@@ -8,16 +8,33 @@ import java.util.List;
 public class JDBCHelper {
 
     String URL;
+    String query = null;
     ResultSet rs;
     Statement stmt;
     Connection conn = null;
     String userName;
     String password;
+    String driverName = "oracle.jdbc.driver.OracleDriver"; //default to oracle
 
     public JDBCHelper(String URL, String userName, String password, String query) {
         this.URL = URL;
         this.userName = userName;
         this.password = password;
+        this.query = query;
+        setup();
+    }
+
+    public JDBCHelper(String URL, String driverName, String userName, String password, String query) {
+        this.URL = URL;
+        this.userName = userName;
+        this.password = password;
+        this.query = query;
+        this.driverName = driverName;
+        setup();
+    }
+
+
+    private void setup() {
         createConnection();
         sendQuery(query);
     }
@@ -27,12 +44,14 @@ public class JDBCHelper {
         this.rs = rs;
     }
 
-    //live connection - currently only for oracle DBs
     //You must have ojdbc14.jar in your /jre/lib/ext directory to open an oracle connection successfully
+    //You must have sqljdbc4.jar in your /jre/lib/ext directory to open a sqlserver connection successfully
     public void createConnection() {
         // create  the connection object
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
+            //  Class.forName("oracle.jdbc.driver.OracleDriver");
+            //  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            Class.forName(driverName);
             conn = DriverManager.getConnection(URL, userName, password);
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,6 +62,7 @@ public class JDBCHelper {
     public void sendQuery(String query) {
         try {
             stmt = conn.createStatement();
+            stmt.setQueryTimeout(30);
             rs = stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,9 +88,9 @@ public class JDBCHelper {
         }
 
         try {
-        if (conn != null) {
-            conn.close();
-        }
+            if (conn != null) {
+                conn.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
