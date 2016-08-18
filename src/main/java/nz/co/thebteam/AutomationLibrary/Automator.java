@@ -6,18 +6,20 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.EdgeDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.MarionetteDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.MarionetteDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
-import io.appium.java_client.ios.IOSDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,6 +59,10 @@ public class Automator {
         switch (automationType) {
             case FIREFOX:
                 setupFirefox();
+                automationPlatform = "web";
+                break;
+            case MARIONETTE:
+                setUpMarionette();
                 automationPlatform = "web";
                 break;
             case CHROME:
@@ -101,6 +107,15 @@ public class Automator {
             caps = new DesiredCapabilities().firefox();
         }
         driver = new FirefoxDriver((caps));
+    }
+
+    private void setUpMarionette() {
+        MarionetteDriverManager.getInstance().setup();
+        //TBD when marionette is released
+        if (caps == null) {
+            caps = new DesiredCapabilities();
+        }
+        driver = new MarionetteDriver(caps);
     }
 
     private void setupChrome() {

@@ -6,6 +6,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class FileHandler {
     public static void writeOutFileAsHTML(Document resource, String fileName) throws IOException {
@@ -22,6 +23,16 @@ public class FileHandler {
         File file = new File(fileName);
         try {
             return FileUtils.readFileToString(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static InputStream readFileAsInputStream(String fileName) {
+        File file = new File(fileName);
+        try {
+            return  FileUtils.openInputStream(file);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

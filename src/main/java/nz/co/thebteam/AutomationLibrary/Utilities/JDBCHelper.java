@@ -65,7 +65,7 @@ public class JDBCHelper {
             stmt.setQueryTimeout(30);
             rs = stmt.executeQuery(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Query did not return a result set.");
         }
     }
 
