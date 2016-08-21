@@ -66,6 +66,18 @@ public class SSHHelper {
             e.printStackTrace();
         }
     }
+    public void putFile(InputStream file, String remotePath) {
+        try {
+            createSession();
+            System.out.println("Crating SFTP Channel.");
+            ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
+            sftpChannel.connect();
+            System.out.println("SFTP Channel created.");
+            sftpChannel.put(file, remotePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void disconnectSession() {
         session.disconnect();
