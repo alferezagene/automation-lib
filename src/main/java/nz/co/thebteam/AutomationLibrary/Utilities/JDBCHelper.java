@@ -44,7 +44,7 @@ public class JDBCHelper {
         this.rs = rs;
     }
 
-    //You must have ojdbc14.jar in your /jre/lib/ext directory to open an oracle connection successfully
+    //You must have ojdbc6.jar in your /jre/lib/ext directory to open an oracle connection successfully
     //You must have sqljdbc4.jar in your /jre/lib/ext directory to open a sqlserver connection successfully
     public void createConnection() {
         // create  the connection object

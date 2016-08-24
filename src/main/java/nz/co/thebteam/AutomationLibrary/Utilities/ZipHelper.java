@@ -27,7 +27,9 @@ public class ZipHelper {
                 String file = "";
                 System.out.println("entry: " + entry.getName() + ", " + entry.getSize());
                 // consume all the data from this entry
+
                 while (zis.available() > 0) {
+                    file += IOUtils.toString(zis);
                     zis.read();
                     file += IOUtils.toString(zis);
                     files.add(file);
