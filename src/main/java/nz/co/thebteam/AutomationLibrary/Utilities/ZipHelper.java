@@ -41,4 +41,18 @@ public class ZipHelper {
         return files;
     }
 
+    public List<String> getFilenames() {
+        List<String> filenames = new ArrayList<>();
+        ZipInputStream zis = new ZipInputStream(zippedFile);
+
+        ZipEntry entry;
+        try {
+            while ((entry = zis.getNextEntry()) != null) {
+                filenames.add(entry.getName());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return filenames;
+    }
 }
