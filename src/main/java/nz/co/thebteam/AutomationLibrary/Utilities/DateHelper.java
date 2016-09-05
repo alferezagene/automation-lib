@@ -1,6 +1,7 @@
 package nz.co.thebteam.AutomationLibrary.Utilities;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,4 +29,17 @@ public class DateHelper {
         cal.add(Calendar.DATE, days); //minus number would decrement the days
         return cal.getTime();
     }
+
+    public static String reformatDate(String dateToParse, String inputDF, String outputDF) {
+        DateFormat inputDateFormat = new SimpleDateFormat(inputDF);
+        Date date = null;
+        try {
+            date = inputDateFormat.parse(dateToParse);
+        } catch (ParseException e) {
+            System.out.println("Could not parse date");
+        }
+        DateFormat dateFormat = new SimpleDateFormat(outputDF);
+        return dateFormat.format(date);
+    }
+
 }
