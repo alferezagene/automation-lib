@@ -42,4 +42,18 @@ public class DateHelper {
         return dateFormat.format(date);
     }
 
+    public static Date getCurrentDate() {
+        return new Date();
+    }
+
+    public static long getCurrentEpoch() {
+        return System.currentTimeMillis() / 1000;
+    }
+
+    public static String convertEpochToDateTime(long time) {
+        Date date = new Date(time*1000);
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return format.format(date);
+    }
+
 }
