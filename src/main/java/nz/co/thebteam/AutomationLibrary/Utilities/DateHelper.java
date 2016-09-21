@@ -1,7 +1,6 @@
 package nz.co.thebteam.AutomationLibrary.Utilities;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,8 +34,9 @@ public class DateHelper {
         Date date = null;
         try {
             date = inputDateFormat.parse(dateToParse);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             System.out.println("Could not parse date");
+            return null;
         }
         DateFormat dateFormat = new SimpleDateFormat(outputDF);
         return dateFormat.format(date);
