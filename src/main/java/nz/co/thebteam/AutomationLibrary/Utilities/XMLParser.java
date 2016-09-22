@@ -167,4 +167,17 @@ public class XMLParser {
         }
     }
 
+    //finds the specified child nodes of a node
+    public NodeList findNodeOnNode(Node node, String nodeName) {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        node = node.cloneNode(true);
+        try {
+            return (NodeList) xpath.compile("//*[local-name()='" + nodeName + "']").evaluate(node, XPathConstants.NODESET);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("The node " + nodeName + " cannot be found.");
+            return null;
+        }
+    }
+
 }
