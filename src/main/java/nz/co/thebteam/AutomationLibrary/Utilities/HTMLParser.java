@@ -65,4 +65,8 @@ public class HTMLParser {
         doc.getElementById(id).attr(attribute, updatedAttribute);
     }
 
+    public Elements getAllElements(){
+        return doc.getAllElements();
+    }
+
 }

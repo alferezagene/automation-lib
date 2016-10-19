@@ -66,6 +66,7 @@ public class JDBCHelper {
             rs = stmt.executeQuery(query);
         } catch (SQLException e) {
             System.out.println("Query did not return a result set.");
+            e.printStackTrace();
         }
     }
 
