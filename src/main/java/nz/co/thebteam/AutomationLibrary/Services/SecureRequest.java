@@ -25,51 +25,44 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-public class SecureRequest {
+public class SecureRequest extends SOAPRequest {
+
+    private HttpsURLConnection conn;
     private String URL;
     private List<List<String>> properties;
     private String requestType;
-    private String JSONRequest;
+    private String request;
     private int responseCode;
     private String authentication = "";
     private String username;
     private String password;
     private String cookie = "";
     private Map<String, List<String>> headers;
-    private HttpsURLConnection conn;
+
 
     public SecureRequest(String URL, String JSONRequest, List<List<String>> properties, String requestType) {
+        super(URL, JSONRequest, properties, requestType);
         this.URL = URL;
-        this.JSONRequest = JSONRequest;
+        this.request = JSONRequest;
         this.requestType = requestType;
         this.properties = properties;
     }
 
-    public SecureRequest(String URL, String JSONRequest, String requestType) {
-        this.URL = URL;
-        this.JSONRequest = JSONRequest;
-        this.requestType = requestType;
-    }
-
-    public SecureRequest(String URL, List<List<String>> properties, String requestType) {
-        this.URL = URL;
-        this.requestType = requestType;
-        this.properties = properties;
-    }
-
-    public SecureRequest(String URL, String requestType) {
-        this.URL = URL;
-        this.requestType = requestType;
-    }
-
+    @Override
     public String sendRequest() {
         String outputJSON = "";
 
         //Note that the following code ignored bad certificates. Use at your own risk on systems you trust.
-        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager(){
-            public X509Certificate[] getAcceptedIssuers(){return null;}
-            public void checkClientTrusted(X509Certificate[] certs, String authType){}
-            public void checkServerTrusted(X509Certificate[] certs, String authType){}
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
         }};
 
         try {
@@ -81,12 +74,10 @@ public class SecureRequest {
         }
 
 
-
         try {
 
             java.net.URL url = new URL(URL);
             conn = (HttpsURLConnection) url.openConnection();
-
 
 
             if (properties != null) {
@@ -112,8 +103,8 @@ public class SecureRequest {
                 conn.setDoOutput(true);
                 OutputStream os = conn.getOutputStream();
 
-                if (JSONRequest != null) {
-                    os.write(JSONRequest.getBytes());
+                if (request != null) {
+                    os.write(request.getBytes());
                 } else {
                     os.write(0);
                 }
@@ -121,7 +112,7 @@ public class SecureRequest {
             } else if (requestType.toUpperCase().equals("PATCH")) {
                 CloseableHttpClient httpClient = HttpClients.createDefault();
                 HttpPatch httpPatch = new HttpPatch(new java.net.URI(URL));
-                StringEntity params = new StringEntity(JSONRequest, ContentType.APPLICATION_JSON);
+                StringEntity params = new StringEntity(request, ContentType.APPLICATION_JSON);
                 httpPatch.setEntity(params);
                 CloseableHttpResponse response = httpClient.execute(httpPatch);
                 HttpEntity entity = response.getEntity();
@@ -147,11 +138,7 @@ public class SecureRequest {
             BufferedReader in = null;
 
             if ((conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) && (conn.getResponseCode() != HttpURLConnection.HTTP_OK) && (conn.getResponseCode() != 302)) {
-
                 in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-
-//                throw new RuntimeException("Failed : HTTP error code : "
-//                        + conn.getResponseCode() + " " + conn.getResponseMessage() + " " + conn.getContent());
             } else if (conn.getHeaderField("Content-Encoding") != null && conn.getHeaderField("Content-Encoding").contains("gzip")) {
                 in = new BufferedReader(new InputStreamReader(new GZIPInputStream(conn.getInputStream())));
             } else {
@@ -170,21 +157,10 @@ public class SecureRequest {
         } catch (Exception e) {
             System.out.println("\r\nResponse code: " + responseCode);
             System.out.println(e.getMessage());
-
-
         }
 
         return outputJSON;
     }
-
-
-    public void setAuthentication(String type, String username, String password) {
-        this.authentication = type;
-        this.username = username;
-        this.password = password;
-    }
-
-
     public int getResponseCode() {
         return responseCode;
     }
