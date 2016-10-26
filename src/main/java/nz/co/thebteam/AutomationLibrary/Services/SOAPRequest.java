@@ -153,5 +153,9 @@ public class SOAPRequest {
         return conn.getHeaderField(header);
     }
 
+    public String getRequestContent() {
+        return this.XMLRequest;
+    }
+
 
 }

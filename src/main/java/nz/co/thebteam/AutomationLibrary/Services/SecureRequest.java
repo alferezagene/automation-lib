@@ -161,6 +161,7 @@ public class SecureRequest extends SOAPRequest {
 
         return outputJSON;
     }
+
     public int getResponseCode() {
         return responseCode;
     }
@@ -175,6 +176,10 @@ public class SecureRequest extends SOAPRequest {
 
     public String getHeader(String header) {
         return conn.getHeaderField(header);
+    }
+
+    public String getRequestContent() {
+        return this.request;
     }
 
 }

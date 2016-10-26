@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +62,6 @@ public class RESTRequest {
 
             java.net.URL url = new URL(URL);
             conn = (HttpURLConnection) url.openConnection();
-
 
 
             if (properties != null) {
@@ -178,6 +176,10 @@ public class RESTRequest {
 
     public String getHeader(String header) {
         return conn.getHeaderField(header);
+    }
+
+    public String getRequestContent() {
+        return this.JSONRequest;
     }
 
 }
