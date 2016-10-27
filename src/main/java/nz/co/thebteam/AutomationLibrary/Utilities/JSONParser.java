@@ -161,6 +161,9 @@ public class JSONParser {
                 JSONParser j2 = new JSONParser((JSONArray) valuesCollection[q]);
                 //recursively go down the jsonarrays and return nodes
                 nodes.addAll(j2.findNodes(nodeName));
+            } else if (valuesCollection[q].getClass().toString().contains("JSONObject")) {
+                JSONParser j2 = new JSONParser((JSONObject) valuesCollection[q]);
+                nodes.addAll(j2.findNodes(nodeName));
             }
         }
         return nodes;
