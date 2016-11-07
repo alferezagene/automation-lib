@@ -71,15 +71,15 @@ public class Element {
         int i = 0;
         while (i < seconds) {
             if (isElementDisplayed(this.locator)) {
-              if (findElement().getAttribute(attribute).toLowerCase().equals(value.toLowerCase()))
-                return;
+                if (findElement().getAttribute(attribute).toLowerCase().equals(value.toLowerCase()))
+                    return;
             } else {
                 HelperMethods.sleep(1);
                 i++;
             }
         }
         try {
-            throw new AssertionError("Element's attribute "+attribute+" was not "+value+" after " + seconds + " seconds.");
+            throw new AssertionError("Element's attribute " + attribute + " was not " + value + " after " + seconds + " seconds.");
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);
@@ -108,21 +108,21 @@ public class Element {
 
     //retrieves the webelement if it exists, otherwise return null
     public WebElement findElement() {
-       if (locator == null) {
-           return webElement;
-       } else {
-           if (Automator.driver.findElements(locator).size() > 0) {
-               return Automator.driver.findElement(locator);
-           } else {
-               try {
-                   throw new Exception("Element does not exist.");
-               } catch (Exception e) {
-                   e.printStackTrace();
-                   assert (false);
-               }
-               return null;
-           }
-       }
+        if (locator == null) {
+            return webElement;
+        } else {
+            if (Automator.driver.findElements(locator).size() > 0) {
+                return Automator.driver.findElement(locator);
+            } else {
+                try {
+                    throw new Exception("Element does not exist.");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    assert (false);
+                }
+                return null;
+            }
+        }
     }
 
     //wrapper everything here.
@@ -146,12 +146,16 @@ public class Element {
         findElement().sendKeys(keys);
     }
 
+    public void sendKeys(CharSequence character) {
+        findElement().sendKeys(character);
+    }
+
     public Boolean isDisplayed() {
-      try {
-          return findElement().isDisplayed();
-      } catch (Exception e) {
-          return false;
-      }
+        try {
+            return findElement().isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Boolean isEnabled() {
