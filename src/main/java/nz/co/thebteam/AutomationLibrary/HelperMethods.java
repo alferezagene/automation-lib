@@ -52,4 +52,22 @@ public class HelperMethods {
         }
         return dataArray;
     }
+
+    //pass a list of  lists
+    public static DataTable createDataTableWithHeadersUsingList(List<List<String>> listValues) {
+        List<List<String>> dataArray = new ArrayList<>();
+        int size = listValues.get(0).size();
+
+        //this is the header row which is intentionally blank.
+        List<String> cd0 = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            cd0.add("");
+        }
+        dataArray.add(cd0);
+        for (List<String> values : listValues) {
+            dataArray.add(values);
+        }
+        return DataTable.create(dataArray);
+    }
+
 }
